@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>New reservation</title>
+</head>
+<body>
+
+<form th:method="POST" th:action="@{/reservations/new}" th:object="${reservation}">
+    <label for="resource">Input name of resource</label>
+    <select th:object="${reservation}" th:field="*{resource}" id="resource">
+        <option value="NONE">---- Select resource----</option>
+        <option th:each="resource : ${resources}"
+                th:value="${resource}"
+                th:text="${resource}">Resource</option>
+    </select>
+    <br/>
+    <label for="user">Input user name</label>
+    <input type="text" th:field="*{user}" id="user"/>
+    <br/>
+    <label for="start">Input start of reservation</label>
+    <input type="datetime-local" th:field="*{start}" id="start"/>
+    <br/>
+    <label for="duration">Input duration of reservation</label>
+    <input type="text" th:field="*{duration}" id="duration"/>
+    <br/>
+
+    <input type="submit" value="Create!">
+</form>
+
+</body>
+</html>
