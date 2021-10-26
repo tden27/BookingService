@@ -22,7 +22,7 @@ public interface ReservationDao {
      * @param duration - продолжительность брони в мин.
      * @return - id созданной записи брони
      */
-    int crete(Resource resource, String user, LocalDateTime start, int duration);
+    int create(Resource resource, String user, LocalDateTime start, int duration);
 
     /**
      * Обновляет запись в базе данных

@@ -1,5 +1,6 @@
 package com.github.tden27.bookingService.controllers;
 
+import com.github.tden27.bookingService.exceptions.NotPossibleAddBookingWithThisDateAndTime;
 import com.github.tden27.bookingService.model.Reservation;
 import com.github.tden27.bookingService.model.Resource;
 import com.github.tden27.bookingService.service.BookingService;
@@ -33,17 +34,36 @@ public class ReservationController {
         return "reservations/new";
     }
 
+//    @PostMapping( "/new")
+//    public ResponseEntity<?> create(@RequestParam("resource") String resource,
+//                      @RequestParam("user") String user,
+//                      @RequestParam("start") String start,
+//                      @RequestParam("duration") String duration) {
+//        Resource resourceToCreate = Resource.valueOf(resource);
+//        LocalDateTime startToCreate = LocalDateTime.parse(start);
+//        int durationToCreate = Integer.parseInt(duration);
+//        int id = bookingService.create(resourceToCreate, user, startToCreate, durationToCreate);
+//        return id > 0 ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+//    }
+
     @PostMapping( "/new")
-    public ResponseEntity<?> create(@RequestParam("resource") String resource,
-                      @RequestParam("user") String user,
-                      @RequestParam("start") String start,
-                      @RequestParam("duration") String duration) {
+    @ResponseBody
+    public Reservation create(@RequestParam("resource") String resource,
+                                    @RequestParam("user") String user,
+                                    @RequestParam("start") String start,
+                                    @RequestParam("duration") String duration) {
         Resource resourceToCreate = Resource.valueOf(resource);
         LocalDateTime startToCreate = LocalDateTime.parse(start);
         int durationToCreate = Integer.parseInt(duration);
-        int id = bookingService.create(resourceToCreate, user, startToCreate, durationToCreate);
-        return id > 0 ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+        int id = 0;
+        try {
+            id = bookingService.create(resourceToCreate, user, startToCreate, durationToCreate);
+        } catch (NotPossibleAddBookingWithThisDateAndTime e) {
+            e.printStackTrace();
+        }
+        return new Reservation(id, resourceToCreate, user, startToCreate, durationToCreate);
     }
+
 
     @GetMapping("/{id}")
     public String readById(@PathVariable("id") int id, Model model) {

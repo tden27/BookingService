@@ -5,10 +5,14 @@ import com.github.tden27.bookingService.model.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
+import java.sql.PreparedStatement;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Component
 public class ReservationDaoJdbcTemplateImpl implements ReservationDao{
@@ -27,10 +31,18 @@ public class ReservationDaoJdbcTemplateImpl implements ReservationDao{
     }
 
     @Override
-    public int crete(Resource resource, String user, LocalDateTime start, int duration) {
-        int id = jdbcTemplate.update("INSERT INTO reservations(resource, user_name, start, duration) VALUES (?, ?, ?, ?)",
-                resource.toString(), user, Timestamp.valueOf(start), duration);
-        return id;
+    public int create(Resource resource, String user, LocalDateTime start, int duration) {
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement("INSERT INTO reservations(resource, user_name, start, duration) VALUES (?, ?, ?, ?)",
+                    new String[] {"id"});
+            ps.setString(1, resource.toString());
+            ps.setString(2, user);
+            ps.setTimestamp(3, Timestamp.valueOf(start));
+            ps.setInt(4, duration);
+            return ps;
+        }, keyHolder);
+        return Objects.requireNonNull(keyHolder.getKey()).intValue();
     }
 
     @Override
@@ -55,6 +67,7 @@ public class ReservationDaoJdbcTemplateImpl implements ReservationDao{
         try {
             return jdbcTemplate.queryForObject("SELECT * FROM reservations WHERE resource=? AND start<=? ORDER BY start DESC LIMIT 1",
                     new ReservationMapper(), resource.toString(), Timestamp.valueOf(start));
+
         } catch (DataAccessException e) {
             return null;
         }
@@ -63,7 +76,7 @@ public class ReservationDaoJdbcTemplateImpl implements ReservationDao{
     // Поиск ближайшей следующей брони
     public Reservation searchClosestNextReservation (Resource resource, LocalDateTime start) {
         try {
-            return jdbcTemplate.queryForObject("SELECT * FROM reservations WHERE resource=? AND start>=? ORDER BY start ASC LIMIT 1",
+            return jdbcTemplate.queryForObject("SELECT * FROM reservations WHERE resource=? AND start>=? ORDER BY start LIMIT 1",
                     new ReservationMapper(), resource.toString(), Timestamp.valueOf(start));
         } catch (DataAccessException e) {
             return null;

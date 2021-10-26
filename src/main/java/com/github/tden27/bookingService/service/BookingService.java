@@ -1,5 +1,6 @@
 package com.github.tden27.bookingService.service;
 
+import com.github.tden27.bookingService.exceptions.NotPossibleAddBookingWithThisDateAndTime;
 import com.github.tden27.bookingService.model.Reservation;
 import com.github.tden27.bookingService.model.Resource;
 
@@ -15,7 +16,7 @@ public interface BookingService {
      * @param duration - продолжительность бронирования
      * @return - ID брони
      */
-    int create(Resource resource, String user, LocalDateTime start, int duration);
+    int create(Resource resource, String user, LocalDateTime start, int duration) throws NotPossibleAddBookingWithThisDateAndTime;
 
     /**
      * Возвращает запись брони по ID
@@ -39,4 +40,14 @@ public interface BookingService {
      * @return true если освобождение прошло успешно, иначе false
      */
     boolean delete(int id);
+
+    /**
+     * Проверяет возможность добавления бронирования по указанной дате и времени,
+     * сравнивая с предыдущей и последующей записями бронирования
+     * @param resource - ресурс который бронируется
+     * @param start - дата и время начала бронирования
+     * @param duration - продолжительность бронирования
+     * @return - true если можно добавить такую запись, false если нет
+     */
+    boolean isAbilityToAddReservation(Resource resource, LocalDateTime start, int duration);
 }
