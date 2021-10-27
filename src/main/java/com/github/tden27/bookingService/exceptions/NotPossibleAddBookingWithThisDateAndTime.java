@@ -1,10 +1,8 @@
 package com.github.tden27.bookingService.exceptions;
 
-public class NotPossibleAddBookingWithThisDateAndTime extends Throwable {
-    private String message;
+public class NotPossibleAddBookingWithThisDateAndTime extends Exception {
 
     public NotPossibleAddBookingWithThisDateAndTime(String message) {
         super(message);
-        this.message = message;
     }
 }

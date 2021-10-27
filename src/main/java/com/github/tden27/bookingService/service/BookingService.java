@@ -32,7 +32,7 @@ public interface BookingService {
      * @param id - id записи брони которую нужно обновить
      * @return - true если данные были обновлены, иначе false
      */
-    boolean update(Reservation reservation, int id);
+    boolean update(Reservation reservation, int id) throws NotPossibleAddBookingWithThisDateAndTime;
 
     /**
      * Освобождает ресурс по идентификатору брони

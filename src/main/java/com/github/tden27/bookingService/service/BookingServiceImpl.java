@@ -6,6 +6,7 @@ import com.github.tden27.bookingService.model.Reservation;
 import com.github.tden27.bookingService.model.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
@@ -20,9 +21,10 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
+    @Transactional
     public int create(Resource resource, String user, LocalDateTime start, int duration) throws NotPossibleAddBookingWithThisDateAndTime {
         if (isAbilityToAddReservation(resource, start, duration)) return reservationDao.create(resource, user, start, duration);
-        else throw new NotPossibleAddBookingWithThisDateAndTime("Не возможно добавить запись с такой датой");
+        else throw new NotPossibleAddBookingWithThisDateAndTime("It is not possible to add a booking with this date");
     }
 
     @Override
@@ -31,10 +33,11 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public boolean update(Reservation reservation, int id) {
+    @Transactional
+    public boolean update(Reservation reservation, int id) throws NotPossibleAddBookingWithThisDateAndTime {
         if (isAbilityToAddReservation(reservation.getResource(), reservation.getStart(), reservation.getDuration()))
             return reservationDao.update(id, reservation);
-        else return false;
+        else throw new NotPossibleAddBookingWithThisDateAndTime("It is not possible to add a booking with this date");
     }
 
     @Override

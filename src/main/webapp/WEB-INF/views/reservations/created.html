@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Created</title>
+</head>
+<body>
+
+<p th:text="${reservation.toString()}">Reservation</p>
+
+<a th:href="@{/reservations/new}">New</a>
+
+</body>
+</html>

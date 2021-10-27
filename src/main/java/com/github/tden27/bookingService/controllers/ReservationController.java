@@ -34,40 +34,42 @@ public class ReservationController {
         return "reservations/new";
     }
 
-//    @PostMapping( "/new")
-//    public ResponseEntity<?> create(@RequestParam("resource") String resource,
-//                      @RequestParam("user") String user,
-//                      @RequestParam("start") String start,
-//                      @RequestParam("duration") String duration) {
-//        Resource resourceToCreate = Resource.valueOf(resource);
-//        LocalDateTime startToCreate = LocalDateTime.parse(start);
-//        int durationToCreate = Integer.parseInt(duration);
-//        int id = bookingService.create(resourceToCreate, user, startToCreate, durationToCreate);
-//        return id > 0 ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
-//    }
-
     @PostMapping( "/new")
-    @ResponseBody
-    public Reservation create(@RequestParam("resource") String resource,
-                                    @RequestParam("user") String user,
-                                    @RequestParam("start") String start,
-                                    @RequestParam("duration") String duration) {
+    public String create(@RequestParam("resource") String resource,
+                      @RequestParam("user") String user,
+                      @RequestParam("start") String start,
+                      @RequestParam("duration") String duration,
+                         Model model) {
         Resource resourceToCreate = Resource.valueOf(resource);
         LocalDateTime startToCreate = LocalDateTime.parse(start);
         int durationToCreate = Integer.parseInt(duration);
         int id = 0;
         try {
             id = bookingService.create(resourceToCreate, user, startToCreate, durationToCreate);
+            model.addAttribute("reservation", new Reservation(id, resourceToCreate, user, startToCreate, durationToCreate));
         } catch (NotPossibleAddBookingWithThisDateAndTime e) {
-            e.printStackTrace();
+            model.addAttribute("reservation", e.getMessage());
         }
-        return new Reservation(id, resourceToCreate, user, startToCreate, durationToCreate);
+        return "reservations/created";
     }
-
 
     @GetMapping("/{id}")
     public String readById(@PathVariable("id") int id, Model model) {
         model.addAttribute("reservation", bookingService.read(id));
+        return "reservations/showById";
+    }
+
+    @GetMapping("/searchById")
+    public String searchByIdPage(Model model) {
+        model.addAttribute("reservation", new Reservation());
+        model.addAttribute("id", 0);
+        return "reservations/searchById";
+    }
+
+    @PostMapping("/searchById")
+    public String searchById(@RequestParam("id") String id, Model model) {
+        int idReservation = Integer.parseInt(id);
+        model.addAttribute("reservation", bookingService.read(idReservation));
         return "reservations/showById";
     }
 
@@ -83,18 +85,24 @@ public class ReservationController {
     }
 
     @PostMapping("/{id}/update")
-    public ResponseEntity<?> updateReservation(@RequestParam("resource") String resource,
+    public String updateReservation(@RequestParam("resource") String resource,
                                     @RequestParam("user") String user,
                                     @RequestParam("start") String start,
                                     @RequestParam("duration") String duration,
-                                    @PathVariable("id") int id) {
+                                    @PathVariable("id") int id, Model model) {
         Reservation reservation = new Reservation();
         reservation.setResource(Resource.valueOf(resource));
         reservation.setUser(user);
         reservation.setStart(LocalDateTime.parse(start));
         reservation.setDuration(Integer.parseInt(duration));
-        final boolean updated = bookingService.update(reservation, id);
-        return updated ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+        boolean updated;
+        try {
+            updated = bookingService.update(reservation, id);
+            model.addAttribute("reservation", reservation);
+        } catch (NotPossibleAddBookingWithThisDateAndTime e) {
+            model.addAttribute("reservation", e.getMessage());
+        }
+        return "reservations/updated";
     }
 
     @PostMapping("/{id}/delete")
