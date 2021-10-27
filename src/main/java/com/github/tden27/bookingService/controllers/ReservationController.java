@@ -110,4 +110,9 @@ public class ReservationController {
         final boolean deleted = bookingService.delete(id);
         return deleted ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
     }
+
+    @ExceptionHandler(NotPossibleAddBookingWithThisDateAndTime.class)
+    public ResponseEntity<Void> handlerException(NotPossibleAddBookingWithThisDateAndTime e) {
+        return ResponseEntity.notFound().build();
+    }
 }
