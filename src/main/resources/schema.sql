@@ -8,8 +8,3 @@ CREATE TABLE reservations
     start        TIMESTAMP,
     duration     INTEGER
 );
-
-INSERT INTO reservations(resource, user_name, start, duration) VALUES ('DOCTOR', 'Ivan', timestamp '2021-10-25 12:00', 900);
-INSERT INTO reservations(resource, user_name, start, duration) VALUES ('MFC', 'Denis', timestamp '2021-10-25 10:30', 180);
-INSERT INTO reservations(resource, user_name, start, duration) VALUES ('MAIL_POST', 'Anna', timestamp '2021-10-27 13:20', 30);
-INSERT INTO reservations(resource, user_name, start, duration) VALUES ('MFC', 'Elena', timestamp '2021-10-30 18:00', 60);

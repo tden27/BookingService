@@ -20,6 +20,7 @@
     <br/>
     <label for="start">Input start of reservation</label>
     <input type="datetime-local" th:field="*{start}" id="start"/>
+    <div style="color:red" th:text="${param.m}">Error</div>
     <br/>
     <label for="duration">Input duration of reservation</label>
     <input type="text" th:field="*{duration}" id="duration"/>
@@ -27,6 +28,9 @@
 
     <input type="submit" value="Create!">
 </form>
+
+<br/>
+<a th:href="@{/reservations/homePage}">Home Page</a>
 
 </body>
 </html>

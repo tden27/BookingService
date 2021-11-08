@@ -1,6 +1,7 @@
 package com.github.tden27.bookingService.service;
 
 import com.github.tden27.bookingService.dao.ReservationDao;
+import com.github.tden27.bookingService.exceptions.NotFoundReservationById;
 import com.github.tden27.bookingService.exceptions.NotPossibleAddBookingWithThisDateAndTime;
 import com.github.tden27.bookingService.model.Reservation;
 import com.github.tden27.bookingService.model.Resource;
@@ -28,8 +29,13 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public Reservation read(int id) {
-        return reservationDao.readById(id);
+    public Reservation read(int id) throws NotFoundReservationById {
+        try {
+            reservationDao.readById(id);
+            return reservationDao.readById(id);
+        } catch (Exception e) {
+            throw new NotFoundReservationById("Not found reservation by ID - " + id);
+        }
     }
 
     @Override

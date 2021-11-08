@@ -1,5 +1,6 @@
 package com.github.tden27.bookingService.service;
 
+import com.github.tden27.bookingService.exceptions.NotFoundReservationById;
 import com.github.tden27.bookingService.exceptions.NotPossibleAddBookingWithThisDateAndTime;
 import com.github.tden27.bookingService.model.Reservation;
 import com.github.tden27.bookingService.model.Resource;
@@ -23,7 +24,7 @@ public interface BookingService {
      * @param id - id брони
      * @return - запись брони с заданным ID
      */
-    Reservation read(int id);
+    Reservation read(int id) throws NotFoundReservationById;
 
     /**
      * Обновляет запись брони с заданным ID,

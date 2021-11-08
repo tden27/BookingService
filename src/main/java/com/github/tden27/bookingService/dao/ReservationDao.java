@@ -12,7 +12,7 @@ public interface ReservationDao {
      * @param id - id брони
      * @return - запись брони с указанным id
      */
-    Reservation readById(int id);
+    Reservation readById(int id) throws Exception;
 
     /**
      * Создает новую запись брони в базе данных

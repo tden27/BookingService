@@ -3,13 +3,17 @@ package com.github.tden27.bookingService.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.jdbc.datasource.init.ScriptUtils;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
+import java.sql.SQLException;
 
 @Configuration
 @EnableTransactionManagement
@@ -29,4 +33,9 @@ public class JdbcTemplateConfiguration {
     public PlatformTransactionManager transactionManager(DataSource dataSource) {
         return new DataSourceTransactionManager(dataSource);
     }
+
+//    @PostConstruct
+//    public void makeScript() throws SQLException {
+//        ScriptUtils.executeSqlScript(dataSource().getConnection(), new ClassPathResource("/schema.sql"));
+//    }
 }
