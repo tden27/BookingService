@@ -34,8 +34,8 @@ public class JdbcTemplateConfiguration {
         return new DataSourceTransactionManager(dataSource);
     }
 
-//    @PostConstruct
-//    public void makeScript() throws SQLException {
-//        ScriptUtils.executeSqlScript(dataSource().getConnection(), new ClassPathResource("/schema.sql"));
-//    }
+    @PostConstruct
+    public void makeScript() throws SQLException {
+        ScriptUtils.executeSqlScript(dataSource().getConnection(), new ClassPathResource("/schema.sql"));
+    }
 }
