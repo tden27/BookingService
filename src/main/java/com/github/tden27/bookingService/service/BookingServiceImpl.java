@@ -31,7 +31,6 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public Reservation read(int id) throws NotFoundReservationById {
         try {
-            reservationDao.readById(id);
             return reservationDao.readById(id);
         } catch (Exception e) {
             throw new NotFoundReservationById("Not found reservation by ID - " + id);

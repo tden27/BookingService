@@ -63,7 +63,7 @@ public class ReservationController {
         try {
             model.addAttribute("reservation", bookingService.read(id));
         } catch (NotFoundReservationById e) {
-            model.addAttribute("reservation", e);
+            model.addAttribute("errorMessage", e.getMessage());
         }
         return "reservations/showById";
     }
@@ -81,7 +81,10 @@ public class ReservationController {
         try {
             model.addAttribute("reservation", bookingService.read(idReservation));
         } catch (NotFoundReservationById e) {
-            model.addAttribute("reservation", e.getMessage());
+            model.addAttribute("reservation", new Reservation());
+            model.addAttribute("id", 0);
+            model.addAttribute("errorMessage", e.getMessage());
+            return "reservations/searchById";
         }
         return "reservations/showById";
     }
@@ -97,7 +100,7 @@ public class ReservationController {
             model.addAttribute("start", reservation.getStart());
             model.addAttribute("duration", reservation.getDuration());
         } catch (NotFoundReservationById e) {
-            model.addAttribute("reservation", e);
+            model.addAttribute("errorMessage", e.getMessage());
         }
         return "reservations/update";
     }
@@ -123,9 +126,11 @@ public class ReservationController {
     }
 
     @PostMapping("/{id}/delete")
-    public ResponseEntity<?> deleteReservation(@PathVariable("id") int id) {
+    public String deleteReservation(@PathVariable("id") int id, Model model) {
+        String message = "Reservation with ID=" + id + " deleted";
         final boolean deleted = bookingService.delete(id);
-        return deleted ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+        if (deleted) model.addAttribute("deleted", message);
+        return "reservations/homePage";
     }
 
     @ExceptionHandler(NotPossibleAddBookingWithThisDateAndTime.class)

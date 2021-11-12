@@ -6,6 +6,8 @@
 </head>
 <body>
 
+<p style="color:red" th:if="${errorMessage != null}" th:text="${errorMessage}">Error</p>
+
 <form th:method="POST" th:action="@{/reservations/{id}/update(id=${reservation.getId()})}" th:object="${reservation}">
     <label for="resource">Input name of resource</label>
     <select th:object="${reservation}" th:field="*{resource}" id="resource">

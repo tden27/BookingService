@@ -10,5 +10,7 @@
 <br/>
 <a th:href="@{/reservations/searchById}">Поиск брони по ID</a>
 
+<p style="color:blue" th:if="${deleted != null}" th:text="${deleted}">Error</p>
+
 </body>
 </html>

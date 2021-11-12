@@ -9,9 +9,9 @@
 <form th:method="POST" th:action="@{/reservations/searchById}" th:object="${reservation}">
     <label for="id">Input user name</label>
     <input type="text" th:field="*{id}" id="id"/>
-
     <input type="submit" value="Search!">
 </form>
+<p style="color:red" th:if="${errorMessage != null}" th:text="${errorMessage}">Error</p>
 
 </body>
 </html>
