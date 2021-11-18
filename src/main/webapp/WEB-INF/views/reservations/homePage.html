@@ -7,8 +7,12 @@
 <body>
 
 <a th:href="@{/reservations/new}">Создать бронирование</a>
-<br/>
+<br>
+
 <a th:href="@{/reservations/searchById}">Поиск брони по ID</a>
+<br>
+
+<a th:href="@{/reservations/searchByUser}">Поиск брони по пользователю</a>
 
 <p style="color:blue" th:if="${deleted != null}" th:text="${deleted}">Error</p>
 

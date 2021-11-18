@@ -4,7 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(code = HttpStatus.NOT_MODIFIED, reason = "It is not possible to add a booking with this date")
-public class NotPossibleAddBookingWithThisDateAndTime extends Exception {
+public class NotPossibleAddBookingWithThisDateAndTime extends RuntimeException {
 
     public NotPossibleAddBookingWithThisDateAndTime(String message) {
         super(message);

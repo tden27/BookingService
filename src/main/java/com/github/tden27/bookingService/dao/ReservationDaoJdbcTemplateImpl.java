@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import java.sql.PreparedStatement;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
 @Component
@@ -81,5 +82,11 @@ public class ReservationDaoJdbcTemplateImpl implements ReservationDao{
         } catch (DataAccessException e) {
             return null;
         }
+    }
+
+    @Override
+    public List<Reservation> readByUser(String user) {
+        return jdbcTemplate.query("SELECT * FROM reservations WHERE user_name=?",
+                new ReservationMapper(), user);
     }
 }

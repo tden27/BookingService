@@ -2,13 +2,13 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>SearchById</title>
+    <title>SearchByUser</title>
 </head>
 <body>
 
-<form th:method="POST" th:action="@{/reservations/searchById}" th:object="${reservation}">
-    <label for="id">Input user id</label>
-    <input type="text" th:field="*{id}" id="id"/>
+<form th:method="POST" th:action="@{/reservations/searchByUser}" th:object="${reservation}">
+    <label for="user">Input user name</label>
+    <input type="text" th:field="*{user}" id="user"/>
     <input type="submit" value="Search!">
 </form>
 <p style="color:red" th:if="${errorMessage != null}" th:text="${errorMessage}">Error</p>

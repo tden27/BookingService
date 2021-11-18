@@ -1,6 +1,7 @@
 package com.github.tden27.bookingService.controllers;
 
 import com.github.tden27.bookingService.exceptions.NotFoundReservationById;
+import com.github.tden27.bookingService.exceptions.NotFoundReservationByUser;
 import com.github.tden27.bookingService.exceptions.NotPossibleAddBookingWithThisDateAndTime;
 import com.github.tden27.bookingService.model.Reservation;
 import com.github.tden27.bookingService.model.Resource;
@@ -62,27 +63,6 @@ public class ReservationController {
             model.addAttribute("reservation", bookingService.read(id));
         } catch (NotFoundReservationById e) {
             model.addAttribute("errorMessage", e.getMessage());
-        }
-        return "reservations/showById";
-    }
-
-    @GetMapping("/searchById")
-    public String searchByIdPage(Model model) {
-        model.addAttribute("reservation", new Reservation());
-        model.addAttribute("id", 0);
-        return "reservations/searchById";
-    }
-
-    @PostMapping("/searchById")
-    public String searchById(@RequestParam("id") String id, Model model) {
-        int idReservation = Integer.parseInt(id);
-        try {
-            model.addAttribute("reservation", bookingService.read(idReservation));
-        } catch (NotFoundReservationById e) {
-            model.addAttribute("reservation", new Reservation());
-            model.addAttribute("id", 0);
-            model.addAttribute("errorMessage", e.getMessage());
-            return "reservations/searchById";
         }
         return "reservations/showById";
     }

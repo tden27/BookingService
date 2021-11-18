@@ -2,6 +2,7 @@ package com.github.tden27.bookingService.service;
 
 import com.github.tden27.bookingService.dao.ReservationDao;
 import com.github.tden27.bookingService.exceptions.NotFoundReservationById;
+import com.github.tden27.bookingService.exceptions.NotFoundReservationByUser;
 import com.github.tden27.bookingService.exceptions.NotPossibleAddBookingWithThisDateAndTime;
 import com.github.tden27.bookingService.model.Reservation;
 import com.github.tden27.bookingService.model.Resource;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class BookingServiceImpl implements BookingService {
@@ -58,5 +60,12 @@ public class BookingServiceImpl implements BookingService {
             return closestNextReservation == null || closestNextReservation.getStart().isAfter(start.plusMinutes(duration));
         }
         return false;
+    }
+
+    @Override
+    public List<Reservation> read(String user) throws NotFoundReservationByUser {
+        List<Reservation> result = reservationDao.readByUser(user);
+        if (result.size() == 0) throw new NotFoundReservationByUser("Not found reservation by user - " + user);
+        return result;
     }
 }

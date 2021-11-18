@@ -6,6 +6,7 @@ import com.github.tden27.bookingService.model.Reservation;
 import com.github.tden27.bookingService.model.Resource;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public interface BookingService {
 
@@ -51,4 +52,11 @@ public interface BookingService {
      * @return - true если можно добавить такую запись, false если нет
      */
     boolean isAbilityToAddReservation(Resource resource, LocalDateTime start, int duration);
+
+    /**
+     * Возвращает список записей о бронировании у данного пользователя
+     * @param user - пользователь забронировавший ресурс
+     * @return - список записей о бронировании у данного пользователя
+     */
+    List<Reservation> read(String user);
 }

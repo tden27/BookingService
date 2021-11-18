@@ -4,6 +4,7 @@ import com.github.tden27.bookingService.model.Reservation;
 import com.github.tden27.bookingService.model.Resource;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public interface ReservationDao {
 
@@ -54,4 +55,11 @@ public interface ReservationDao {
      * @return - запись брони следующей записи
      */
     Reservation searchClosestNextReservation (Resource resource, LocalDateTime start);
+
+    /**
+     * Читает из базы данных запись о брони по данному пользователю
+     * @param user - имя пользователя
+     * @return - список записей о бронировании по данногму пользователю
+     */
+    List<Reservation> readByUser(String user);
 }
