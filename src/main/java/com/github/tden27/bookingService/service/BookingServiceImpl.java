@@ -2,7 +2,8 @@ package com.github.tden27.bookingService.service;
 
 import com.github.tden27.bookingService.dao.ReservationDao;
 import com.github.tden27.bookingService.exceptions.NotFoundReservationById;
-import com.github.tden27.bookingService.exceptions.NotFoundReservationByUser;
+import com.github.tden27.bookingService.exceptions.NotFoundReservationsByResource;
+import com.github.tden27.bookingService.exceptions.NotFoundReservationsByUser;
 import com.github.tden27.bookingService.exceptions.NotPossibleAddBookingWithThisDateAndTime;
 import com.github.tden27.bookingService.model.Reservation;
 import com.github.tden27.bookingService.model.Resource;
@@ -31,7 +32,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public Reservation read(int id) throws NotFoundReservationById {
+    public Reservation readByUser(int id) throws NotFoundReservationById {
         try {
             return reservationDao.readById(id);
         } catch (Exception e) {
@@ -63,9 +64,16 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<Reservation> read(String user) throws NotFoundReservationByUser {
+    public List<Reservation> readByUser(String user) throws NotFoundReservationsByUser {
         List<Reservation> result = reservationDao.readByUser(user);
-        if (result.size() == 0) throw new NotFoundReservationByUser("Not found reservation by user - " + user);
+        if (result.size() == 0) throw new NotFoundReservationsByUser("Not found reservation by user - " + user);
+        return result;
+    }
+
+    @Override
+    public List<Reservation> readByResource(String resource) throws NotFoundReservationsByResource {
+        List<Reservation> result = reservationDao.readByResource(resource);
+        if (result.size() == 0) throw new NotFoundReservationsByResource("Not found reservation by resource - " + resource);
         return result;
     }
 }

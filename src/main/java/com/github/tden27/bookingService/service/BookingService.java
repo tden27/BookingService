@@ -1,6 +1,8 @@
 package com.github.tden27.bookingService.service;
 
 import com.github.tden27.bookingService.exceptions.NotFoundReservationById;
+import com.github.tden27.bookingService.exceptions.NotFoundReservationsByResource;
+import com.github.tden27.bookingService.exceptions.NotFoundReservationsByUser;
 import com.github.tden27.bookingService.exceptions.NotPossibleAddBookingWithThisDateAndTime;
 import com.github.tden27.bookingService.model.Reservation;
 import com.github.tden27.bookingService.model.Resource;
@@ -17,6 +19,8 @@ public interface BookingService {
      * @param start - дата начала бронирования
      * @param duration - продолжительность бронирования
      * @return - ID брони
+     * @throws NotPossibleAddBookingWithThisDateAndTime - исключение о невозможности добавления записи на указанные дату
+     * время и продолжительность
      */
     int create(Resource resource, String user, LocalDateTime start, int duration) throws NotPossibleAddBookingWithThisDateAndTime;
 
@@ -24,8 +28,9 @@ public interface BookingService {
      * Возвращает запись брони по ID
      * @param id - id брони
      * @return - запись брони с заданным ID
+     * @throws NotFoundReservationById - исключение о невозможности найти записи с указанным ID
      */
-    Reservation read(int id) throws NotFoundReservationById;
+    Reservation readByUser(int id) throws NotFoundReservationById;
 
     /**
      * Обновляет запись брони с заданным ID,
@@ -40,6 +45,8 @@ public interface BookingService {
      * Освобождает ресурс по идентификатору брони
      * @param id - идентификатор брони
      * @return true если освобождение прошло успешно, иначе false
+     * @throws NotPossibleAddBookingWithThisDateAndTime - исключение о невозможности добавления записи на указанные дату
+     * время и продолжительность
      */
     boolean delete(int id);
 
@@ -57,6 +64,15 @@ public interface BookingService {
      * Возвращает список записей о бронировании у данного пользователя
      * @param user - пользователь забронировавший ресурс
      * @return - список записей о бронировании у данного пользователя
+     * @throws NotFoundReservationsByUser - исключение о невозможности найти записей с указанным именем пользователя
      */
-    List<Reservation> read(String user);
+    List<Reservation> readByUser(String user) throws NotFoundReservationsByUser;
+
+    /**
+     * Возвращает список записей о бронировании по указанному ресурсу
+     * @param resource - ресурс который забронирован
+     * @return - список записей о бронировании по указанному ресурсу
+     * @throws NotFoundReservationsByResource - исключение о невозможности найти записей с указанным ресурсом
+     */
+    List<Reservation> readByResource(String resource) throws NotFoundReservationsByResource;
 }

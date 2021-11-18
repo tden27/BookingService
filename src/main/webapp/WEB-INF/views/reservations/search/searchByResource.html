@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>SearchByResource</title>
+</head>
+<body>
+
+<form th:method="POST" th:action="@{/reservations/searchByResource}" th:object="${reservation}">
+    <label for="resource">Input resource</label>
+    <select th:object="${reservation}" th:field="*{resource}" id="resource">
+        <option value="NONE">---- Select resource----</option>
+        <option th:each="resource : ${resources}"
+                th:value="${resource}"
+                th:text="${resource}">Resource</option>
+    </select>
+    <input type="submit" value="Search!">
+</form>
+<p style="color:red" th:if="${errorMessage != null}" th:text="${errorMessage}">Error</p>
+<br>
+<a th:href="@{/reservations/homePage}">Home Page</a>
+
+</body>
+</html>

@@ -4,9 +4,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(code = HttpStatus.NOT_FOUND, reason = "Not found reservation by user")
-public class NotFoundReservationByUser extends RuntimeException{
+public class NotFoundReservationsByUser extends RuntimeException{
 
-    public NotFoundReservationByUser(String message) {
+    public NotFoundReservationsByUser(String message) {
         super(message);
     }
 }

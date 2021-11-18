@@ -89,4 +89,10 @@ public class ReservationDaoJdbcTemplateImpl implements ReservationDao{
         return jdbcTemplate.query("SELECT * FROM reservations WHERE user_name=?",
                 new ReservationMapper(), user);
     }
+
+    @Override
+    public List<Reservation> readByResource(String resource) {
+        return jdbcTemplate.query("SELECT * FROM reservations WHERE resource=?",
+                new ReservationMapper(), resource);
+    }
 }

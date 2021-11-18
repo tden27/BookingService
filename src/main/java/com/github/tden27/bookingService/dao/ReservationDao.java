@@ -62,4 +62,11 @@ public interface ReservationDao {
      * @return - список записей о бронировании по данногму пользователю
      */
     List<Reservation> readByUser(String user);
+
+    /**
+     * Читает из базы данных запись о брони по данному ресурсу
+     * @param resource - - ресурс по которому производится поиск
+     * @return - список записей о бронировании по данногму ресурсу
+     */
+    List<Reservation> readByResource(String resource);
 }

@@ -1,7 +1,6 @@
 package com.github.tden27.bookingService.controllers;
 
 import com.github.tden27.bookingService.exceptions.NotFoundReservationById;
-import com.github.tden27.bookingService.exceptions.NotFoundReservationByUser;
 import com.github.tden27.bookingService.exceptions.NotPossibleAddBookingWithThisDateAndTime;
 import com.github.tden27.bookingService.model.Reservation;
 import com.github.tden27.bookingService.model.Resource;
@@ -60,7 +59,7 @@ public class ReservationController {
     @GetMapping("/{id}")
     public String readById(@PathVariable("id") int id, Model model) {
         try {
-            model.addAttribute("reservation", bookingService.read(id));
+            model.addAttribute("reservation", bookingService.readByUser(id));
         } catch (NotFoundReservationById e) {
             model.addAttribute("errorMessage", e.getMessage());
         }
@@ -71,7 +70,7 @@ public class ReservationController {
     public String updateReservationPage(Model model, @PathVariable("id") int id) {
         Reservation reservation;
         try {
-            reservation = bookingService.read(id);
+            reservation = bookingService.readByUser(id);
             model.addAttribute("reservation", reservation);
             model.addAttribute("resources", Resource.getResources());
             model.addAttribute("user_name", reservation.getUser());
