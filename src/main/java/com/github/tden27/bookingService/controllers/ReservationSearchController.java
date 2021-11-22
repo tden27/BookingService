@@ -5,6 +5,7 @@ import com.github.tden27.bookingService.exceptions.NotFoundReservationsByResourc
 import com.github.tden27.bookingService.exceptions.NotFoundReservationsByUser;
 import com.github.tden27.bookingService.model.Reservation;
 import com.github.tden27.bookingService.model.Resource;
+import com.github.tden27.bookingService.model.User;
 import com.github.tden27.bookingService.service.BookingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -36,7 +37,7 @@ public class ReservationSearchController {
     public String searchById(@RequestParam("id") String id, Model model) {
         int idReservation = Integer.parseInt(id);
         try {
-            model.addAttribute("reservation", bookingService.readByUser(idReservation));
+            model.addAttribute("reservation", bookingService.readById(idReservation));
         } catch (NotFoundReservationById e) {
             model.addAttribute("reservation", new Reservation());
             model.addAttribute("id", 0);
@@ -56,7 +57,7 @@ public class ReservationSearchController {
     @PostMapping("/searchByUser")
     public String searchByUser(@RequestParam("user") String user, Model model) {
         try {
-            model.addAttribute("reservations", bookingService.readByUser(user));
+            model.addAttribute("reservations", bookingService.readByUser(new User(user)));
         } catch (NotFoundReservationsByUser e) {
             model.addAttribute("reservation", new Reservation());
             model.addAttribute("user", "");

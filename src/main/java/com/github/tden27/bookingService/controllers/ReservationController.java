@@ -4,6 +4,7 @@ import com.github.tden27.bookingService.exceptions.NotFoundReservationById;
 import com.github.tden27.bookingService.exceptions.NotPossibleAddBookingWithThisDateAndTime;
 import com.github.tden27.bookingService.model.Reservation;
 import com.github.tden27.bookingService.model.Resource;
+import com.github.tden27.bookingService.model.User;
 import com.github.tden27.bookingService.service.BookingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Controller
 @RequestMapping("/reservations")
@@ -32,7 +34,7 @@ public class ReservationController {
     public String createReservationPage(Reservation reservation, Model model) {
         model.addAttribute("reservation", new Reservation());
         model.addAttribute("resources", Resource.getResources());
-        model.addAttribute("user", reservation.getUser());
+        model.addAttribute("user", "");
         model.addAttribute("start", LocalDateTime.now());
         model.addAttribute("duration", 0);
         if (!model.containsAttribute("error")) {
@@ -48,18 +50,19 @@ public class ReservationController {
                          @RequestParam("duration") String duration,
                          Model model) throws NotPossibleAddBookingWithThisDateAndTime {
         Resource resourceToCreate = Resource.valueOf(resource);
+        User userToCreate = new User(user);
         LocalDateTime startToCreate = LocalDateTime.parse(start);
         int durationToCreate = Integer.parseInt(duration);
-        int id = bookingService.create(resourceToCreate, user, startToCreate, durationToCreate);
+        int id = bookingService.create(resourceToCreate, userToCreate, startToCreate, durationToCreate);
         model.addAttribute("reservation",
-                new Reservation(id, resourceToCreate, user, startToCreate, durationToCreate));
+                new Reservation(id, resourceToCreate, userToCreate, startToCreate, durationToCreate));
         return "reservations/created";
     }
 
     @GetMapping("/{id}")
     public String readById(@PathVariable("id") int id, Model model) {
         try {
-            model.addAttribute("reservation", bookingService.readByUser(id));
+            model.addAttribute("reservation", bookingService.readById(id));
         } catch (NotFoundReservationById e) {
             model.addAttribute("errorMessage", e.getMessage());
         }
@@ -70,10 +73,10 @@ public class ReservationController {
     public String updateReservationPage(Model model, @PathVariable("id") int id) {
         Reservation reservation;
         try {
-            reservation = bookingService.readByUser(id);
+            reservation = bookingService.readById(id);
             model.addAttribute("reservation", reservation);
             model.addAttribute("resources", Resource.getResources());
-            model.addAttribute("user_name", reservation.getUser());
+            model.addAttribute("user", reservation.getUser().getUserName());
             model.addAttribute("start", reservation.getStart());
             model.addAttribute("duration", reservation.getDuration());
         } catch (NotFoundReservationById e) {
@@ -84,14 +87,14 @@ public class ReservationController {
 
     @PostMapping("/{id}/update")
     public String updateReservation(@RequestParam("resource") String resource,
-                                    @RequestParam("user") String user,
+                                    @RequestParam("user.userName") String user,
                                     @RequestParam("start") String start,
                                     @RequestParam("duration") String duration,
                                     @PathVariable("id") int id, Model model) {
         Reservation reservation = new Reservation();
         reservation.setId(id);
         reservation.setResource(Resource.valueOf(resource));
-        reservation.setUser(user);
+        reservation.setUser(new User(user));
         reservation.setStart(LocalDateTime.parse(start));
         reservation.setDuration(Integer.parseInt(duration));
         try {

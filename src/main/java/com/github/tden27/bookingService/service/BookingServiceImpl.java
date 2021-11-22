@@ -7,6 +7,7 @@ import com.github.tden27.bookingService.exceptions.NotFoundReservationsByUser;
 import com.github.tden27.bookingService.exceptions.NotPossibleAddBookingWithThisDateAndTime;
 import com.github.tden27.bookingService.model.Reservation;
 import com.github.tden27.bookingService.model.Resource;
+import com.github.tden27.bookingService.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,13 +27,13 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     @Transactional
-    public int create(Resource resource, String user, LocalDateTime start, int duration) throws NotPossibleAddBookingWithThisDateAndTime {
+    public int create(Resource resource, User user, LocalDateTime start, int duration) throws NotPossibleAddBookingWithThisDateAndTime {
         if (isAbilityToAddReservation(resource, start, duration)) return reservationDao.create(resource, user, start, duration);
         else throw new NotPossibleAddBookingWithThisDateAndTime("It is not possible to add a booking with this date");
     }
 
     @Override
-    public Reservation readByUser(int id) throws NotFoundReservationById {
+    public Reservation readById(int id) throws NotFoundReservationById {
         try {
             return reservationDao.readById(id);
         } catch (Exception e) {
@@ -64,7 +65,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<Reservation> readByUser(String user) throws NotFoundReservationsByUser {
+    public List<Reservation> readByUser(User user) throws NotFoundReservationsByUser {
         List<Reservation> result = reservationDao.readByUser(user);
         if (result.size() == 0) throw new NotFoundReservationsByUser("Not found reservation by user - " + user);
         return result;

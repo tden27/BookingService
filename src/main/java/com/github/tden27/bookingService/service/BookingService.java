@@ -6,6 +6,7 @@ import com.github.tden27.bookingService.exceptions.NotFoundReservationsByUser;
 import com.github.tden27.bookingService.exceptions.NotPossibleAddBookingWithThisDateAndTime;
 import com.github.tden27.bookingService.model.Reservation;
 import com.github.tden27.bookingService.model.Resource;
+import com.github.tden27.bookingService.model.User;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -22,7 +23,7 @@ public interface BookingService {
      * @throws NotPossibleAddBookingWithThisDateAndTime - исключение о невозможности добавления записи на указанные дату
      * время и продолжительность
      */
-    int create(Resource resource, String user, LocalDateTime start, int duration) throws NotPossibleAddBookingWithThisDateAndTime;
+    int create(Resource resource, User user, LocalDateTime start, int duration) throws NotPossibleAddBookingWithThisDateAndTime;
 
     /**
      * Возвращает запись брони по ID
@@ -30,7 +31,7 @@ public interface BookingService {
      * @return - запись брони с заданным ID
      * @throws NotFoundReservationById - исключение о невозможности найти записи с указанным ID
      */
-    Reservation readByUser(int id) throws NotFoundReservationById;
+    Reservation readById(int id) throws NotFoundReservationById;
 
     /**
      * Обновляет запись брони с заданным ID,
@@ -66,7 +67,7 @@ public interface BookingService {
      * @return - список записей о бронировании у данного пользователя
      * @throws NotFoundReservationsByUser - исключение о невозможности найти записей с указанным именем пользователя
      */
-    List<Reservation> readByUser(String user) throws NotFoundReservationsByUser;
+    List<Reservation> readByUser(User user) throws NotFoundReservationsByUser;
 
     /**
      * Возвращает список записей о бронировании по указанному ресурсу
