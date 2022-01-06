@@ -2,6 +2,7 @@ package com.github.tden27.bookingService.dao;
 
 import com.github.tden27.bookingService.model.Reservation;
 import com.github.tden27.bookingService.model.Resource;
+import com.github.tden27.bookingService.model.User;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,12 +19,12 @@ public interface ReservationDao {
     /**
      * Создает новую запись брони в базе данных
      * @param resource - ресурс для бронирования
-     * @param user - имя пользователя
+     * @param user - пользователь
      * @param start - дата и время начала брони
      * @param duration - продолжительность брони в мин.
      * @return - id созданной записи брони
      */
-    int create(Resource resource, String user, LocalDateTime start, int duration);
+    int create(Resource resource, User user, LocalDateTime start, int duration);
 
     /**
      * Обновляет запись в базе данных
@@ -58,10 +59,10 @@ public interface ReservationDao {
 
     /**
      * Читает из базы данных запись о брони по данному пользователю
-     * @param user - имя пользователя
+     * @param user - пользователь
      * @return - список записей о бронировании по данногму пользователю
      */
-    List<Reservation> readByUser(String user);
+    List<Reservation> readByUser(User user);
 
     /**
      * Читает из базы данных запись о брони по данному ресурсу
