@@ -14,7 +14,7 @@ public interface ReservationDao {
      * @param id - id брони
      * @return - запись брони с указанным id
      */
-    Reservation readById(int id) throws Exception;
+    Reservation readById(Long id) throws Exception;
 
     /**
      * Создает новую запись брони в базе данных
@@ -24,7 +24,7 @@ public interface ReservationDao {
      * @param duration - продолжительность брони в мин.
      * @return - id созданной записи брони
      */
-    int create(Resource resource, User user, LocalDateTime start, int duration);
+    Long create(Resource resource, User user, LocalDateTime start, int duration);
 
     /**
      * Обновляет запись в базе данных
@@ -32,14 +32,14 @@ public interface ReservationDao {
      * @param reservation - обновленная запись брони
      * @return - true усли успешно, иначе false
      */
-    boolean update(int id, Reservation reservation);
+    boolean update(Long id, Reservation reservation);
 
     /**
      * Удаляет запись брони из базы данных по указанному id
      * @param id - id удаляемой записи
      * @return - true усли успешно, иначе false
      */
-    boolean delete(int id);
+    boolean delete(Long id);
 
     /**
      * Поиск ближайшей предыдущей по дате записи

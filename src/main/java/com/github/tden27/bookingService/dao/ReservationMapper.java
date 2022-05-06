@@ -13,11 +13,11 @@ public class ReservationMapper implements RowMapper<Reservation> {
     public Reservation mapRow(ResultSet resultSet, int rowNum) throws SQLException {
         Reservation reservation = new Reservation();
 
-        User user = new User(resultSet.getString("user_name")/*,
+        User user = new User(/*resultSet.getString("user_name"),
                 resultSet.getString("login"),
                 resultSet.getString("password")*/);
 
-        reservation.setId(resultSet.getInt("id"));
+        reservation.setId(resultSet.getLong("id"));
         reservation.setResource(Resource.valueOf(resultSet.getString("resource")));
         reservation.setUser(user);
         reservation.setStart(resultSet.getTimestamp("start").toLocalDateTime());

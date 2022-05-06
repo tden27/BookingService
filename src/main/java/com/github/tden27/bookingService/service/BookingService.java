@@ -7,10 +7,12 @@ import com.github.tden27.bookingService.exceptions.NotPossibleAddBookingWithThis
 import com.github.tden27.bookingService.model.Reservation;
 import com.github.tden27.bookingService.model.Resource;
 import com.github.tden27.bookingService.model.User;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Service
 public interface BookingService {
 
     /**
@@ -23,7 +25,7 @@ public interface BookingService {
      * @throws NotPossibleAddBookingWithThisDateAndTime - исключение о невозможности добавления записи на указанные дату
      * время и продолжительность
      */
-    int create(Resource resource, User user, LocalDateTime start, int duration) throws NotPossibleAddBookingWithThisDateAndTime;
+    Long create(Resource resource, User user, LocalDateTime start, int duration) throws NotPossibleAddBookingWithThisDateAndTime;
 
     /**
      * Возвращает запись брони по ID
@@ -31,7 +33,7 @@ public interface BookingService {
      * @return - запись брони с заданным ID
      * @throws NotFoundReservationById - исключение о невозможности найти записи с указанным ID
      */
-    Reservation readById(int id) throws NotFoundReservationById;
+    Reservation readById(Long id) throws NotFoundReservationById;
 
     /**
      * Обновляет запись брони с заданным ID,
@@ -40,7 +42,7 @@ public interface BookingService {
      * @param id - id записи брони которую нужно обновить
      * @return - true если данные были обновлены, иначе false
      */
-    boolean update(Reservation reservation, int id) throws NotPossibleAddBookingWithThisDateAndTime;
+    boolean update(Reservation reservation, Long id) throws NotPossibleAddBookingWithThisDateAndTime;
 
     /**
      * Освобождает ресурс по идентификатору брони
@@ -49,7 +51,7 @@ public interface BookingService {
      * @throws NotPossibleAddBookingWithThisDateAndTime - исключение о невозможности добавления записи на указанные дату
      * время и продолжительность
      */
-    boolean delete(int id);
+    boolean delete(Long id);
 
     /**
      * Проверяет возможность добавления бронирования по указанной дате и времени,

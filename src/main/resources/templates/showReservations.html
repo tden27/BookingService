@@ -7,14 +7,14 @@
 <body>
 
 <div th:each="reservation : ${reservations}">
-    <a th:href="@{/reservations/{id}(id=${reservation.getId()})}"
+    <a th:href="@{/reservation/{id}(id=${reservation.getId()})}"
        th:text="${reservation.toString()}">Reservation</a>
 </div>
 
 <p style="color:red" th:if="${errorMessage != null}" th:text="${errorMessage}">Error</p>
 
-<br/>
-<a th:href="@{/reservations/homePage}">Home Page</a>
+<br/><hr>
+<a th:href="@{/home}">Home Page</a>
 
 </body>
 </html>

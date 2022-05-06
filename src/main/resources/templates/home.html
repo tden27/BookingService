@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Booking Service</title>
+</head>
+<body>
+<div align="right" th:text="${name}">User name</div>
+<br>
+<a th:href="@{/new}">Создать бронирование</a><br><br>
+<a th:href="@{/searchById}">Поиск брони по ID</a><br><br>
+<a th:href="@{/searchByUser}">Поиск брони по пользователю</a><br><br>
+<a th:href="@{/searchByResource}">Поиск брони по ресурсу</a><br><br>
+<p style="color:blue" th:if="${deleted != null}" th:text="${deleted}">Error</p>
+
+<form th:action="@{/logout}" method="post">
+    <input type="submit" value="Sign Out"/>
+</form>
+</body>
+</html>

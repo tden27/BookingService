@@ -5,36 +5,25 @@
     <title>Edit reservation</title>
 </head>
 <body>
-
 <p style="color:red" th:if="${errorMessage != null}" th:text="${errorMessage}">Error</p>
-
-<form th:method="POST" th:action="@{/reservations/{id}/update(id=${reservation.getId()})}" th:object="${reservation}">
+<form th:method="POST" th:action="@{/reservation/{id}/update(id=${reservation.getId()})}" th:object="${reservation}">
     <label for="resource">Input name of resource</label>
     <select th:object="${reservation}" th:field="*{resource}" id="resource">
         <option value="NONE">---- Select resource----</option>
         <option th:each="resource : ${resources}"
                 th:value="${resource}"
                 th:text="${resource}">Resource</option>
-    </select>
-    <br/>
+    </select><br><br>
     <label for="user">Input user name</label>
-    <input type="text" th:field="*{user.userName}" id="user"/>
-
-    <br/>
+    <input type="text" th:field="*{user.name}" id="user"/><br><br>
     <label for="start">Input start of reservation</label>
     <input type="datetime-local" th:field="*{start}" id="start"/>
-
-    <div style="color:red" th:text="${param.m}">Error</div>
-    <br/>
+    <div style="color:red" th:text="${param.m}">Error</div><br><br>
     <label for="duration">Input duration of reservation</label>
-    <input type="text" th:field="*{duration}" id="duration"/>
-    <br/>
-
+    <input type="text" th:field="*{duration}" id="duration"/><br><br>
     <input type="submit" value="Update!">
 </form>
-
-<br/>
-<a th:href="@{/reservations/homePage}">Home Page</a>
-
+<br/><hr>
+<a th:href="@{/home}">Home Page</a>
 </body>
 </html>

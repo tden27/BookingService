@@ -27,33 +27,33 @@ public class ReservationDaoJdbcTemplateImpl implements ReservationDao{
     }
 
     @Override
-    public Reservation readById(int id) {
+    public Reservation readById(Long id) {
         return jdbcTemplate.queryForObject("SELECT * FROM reservations WHERE id=?",
                 new ReservationMapper(), id);
     }
 
     @Override
-    public int create(Resource resource, User user, LocalDateTime start, int duration) {
-        jdbcTemplate.update("INSERT INTO users(name) VALUES (?) ON CONFLICT DO NOTHING", user.getUserName());
+    public Long create(Resource resource, User user, LocalDateTime start, int duration) {
+        jdbcTemplate.update("INSERT INTO users(name) VALUES (?) ON CONFLICT DO NOTHING", user.getName());
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement("INSERT INTO reservations(resource, user_name, start, duration) VALUES (?, ?, ?, ?)",
                     new String[] {"id"});
             ps.setString(1, resource.toString());
-            ps.setString(2, user.getUserName());
+            ps.setString(2, user.getName());
             ps.setTimestamp(3, Timestamp.valueOf(start));
             ps.setInt(4, duration);
             return ps;
         }, keyHolder);
-        return Objects.requireNonNull(keyHolder.getKey()).intValue();
+        return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
     @Override
-    public boolean update(int id, Reservation reservation) {
-        jdbcTemplate.update("INSERT INTO users(name) VALUES (?) ON CONFLICT DO NOTHING", reservation.getUser().getUserName());
+    public boolean update(Long id, Reservation reservation) {
+        jdbcTemplate.update("INSERT INTO users(name) VALUES (?) ON CONFLICT DO NOTHING", reservation.getUser().getName());
         int result = jdbcTemplate.update("UPDATE reservations SET resource=?, user_name=?, start=?, duration=? WHERE id=?",
                 reservation.getResource().toString(),
-                reservation.getUser().getUserName(),
+                reservation.getUser().getName(),
                 Timestamp.valueOf(reservation.getStart()),
                 reservation.getDuration(),
                 id);
@@ -61,7 +61,7 @@ public class ReservationDaoJdbcTemplateImpl implements ReservationDao{
     }
 
     @Override
-    public boolean delete(int id) {
+    public boolean delete(Long id) {
         int result = jdbcTemplate.update("DELETE FROM reservations WHERE id=?", id);
         return result > 0;
     }
@@ -90,7 +90,7 @@ public class ReservationDaoJdbcTemplateImpl implements ReservationDao{
     @Override
     public List<Reservation> readByUser(User user) {
         return jdbcTemplate.query("SELECT * FROM reservations WHERE user_name=?",
-                new ReservationMapper(), user.getUserName());
+                new ReservationMapper(), user.getName());
     }
 
     @Override
