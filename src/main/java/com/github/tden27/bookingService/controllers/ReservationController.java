@@ -23,7 +23,7 @@ public class ReservationController {
         this.bookingService = bookingService;
     }
 
-    @GetMapping("/home")
+    @GetMapping("/")
     public String homePage(@AuthenticationPrincipal User user, Model model) {
         model.addAttribute("name", user.getName());
         return "/home";
@@ -45,7 +45,6 @@ public class ReservationController {
     @PostMapping("/new")
     public String create(@AuthenticationPrincipal User user,
                          @RequestParam("resource") String resource,
-                         @RequestParam("user") String userName,
                          @RequestParam("start") String start,
                          @RequestParam("duration") String duration,
                          Model model) throws NotPossibleAddBookingWithThisDateAndTime {
@@ -69,7 +68,7 @@ public class ReservationController {
     }
 
     @GetMapping("/reservation/{id}/update")
-    public String updateReservationPage(Model model, @PathVariable("id") Long id) {
+    public String updateReservationPage(@PathVariable("id") Long id, Model model) {
         Reservation reservation;
         try {
             reservation = bookingService.readById(id);
@@ -85,15 +84,15 @@ public class ReservationController {
     }
 
     @PostMapping("/reservation/{id}/update")
-    public String updateReservation(@RequestParam("resource") String resource,
-                                    @RequestParam("user.userName") String user,
+    public String updateReservation(@AuthenticationPrincipal User user,
+                                    @RequestParam("resource") String resource,
                                     @RequestParam("start") String start,
                                     @RequestParam("duration") String duration,
                                     @PathVariable("id") Long id, Model model) {
         Reservation reservation = new Reservation();
         reservation.setId(id);
         reservation.setResource(Resource.valueOf(resource));
-        reservation.setUser(new User());
+        reservation.setUser(user);
         reservation.setStart(LocalDateTime.parse(start));
         reservation.setDuration(Integer.parseInt(duration));
         try {
@@ -106,7 +105,9 @@ public class ReservationController {
     }
 
     @PostMapping("/reservation/{id}/delete")
-    public String deleteReservation(@PathVariable("id") Long id, Model model) {
+    public String deleteReservation(@AuthenticationPrincipal User user,
+                                    @PathVariable("id") Long id,
+                                    Model model) {
         String message = "Reservation with ID=" + id + " deleted";
         final boolean deleted = bookingService.delete(id);
         if (deleted) model.addAttribute("deleted", message);

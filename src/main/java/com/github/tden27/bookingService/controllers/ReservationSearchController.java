@@ -55,7 +55,7 @@ public class ReservationSearchController {
     @PostMapping("/searchByUser")
     public String searchByUser(@RequestParam("user") String user, Model model) {
         try {
-            model.addAttribute("reservations", bookingService.readByUser(new User()));
+            model.addAttribute("reservations", bookingService.readByUser(user));
         } catch (NotFoundReservationsByUser e) {
             model.addAttribute("reservation", new Reservation());
             model.addAttribute("user", "");

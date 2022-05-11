@@ -40,9 +40,9 @@ public interface BookingService {
      * в соответствии с переданной бронью
      * @param reservation - клиент в соответсвии с которым нужно обновить данные
      * @param id - id записи брони которую нужно обновить
-     * @return - true если данные были обновлены, иначе false
+     * @return - измененную запись брони
      */
-    boolean update(Reservation reservation, Long id) throws NotPossibleAddBookingWithThisDateAndTime;
+    Reservation update(Reservation reservation, Long id) throws NotPossibleAddBookingWithThisDateAndTime;
 
     /**
      * Освобождает ресурс по идентификатору брони
@@ -56,20 +56,21 @@ public interface BookingService {
     /**
      * Проверяет возможность добавления бронирования по указанной дате и времени,
      * сравнивая с предыдущей и последующей записями бронирования
+     * @param id - идентификатор брони
      * @param resource - ресурс который бронируется
      * @param start - дата и время начала бронирования
      * @param duration - продолжительность бронирования
      * @return - true если можно добавить такую запись, false если нет
      */
-    boolean isAbilityToAddReservation(Resource resource, LocalDateTime start, int duration);
+    boolean isAbilityToAddReservation(Long id, Resource resource, LocalDateTime start, int duration);
 
     /**
      * Возвращает список записей о бронировании у данного пользователя
-     * @param user - пользователь забронировавший ресурс
+     * @param name - имя пользователя забронировавшего ресурс
      * @return - список записей о бронировании у данного пользователя
      * @throws NotFoundReservationsByUser - исключение о невозможности найти записей с указанным именем пользователя
      */
-    List<Reservation> readByUser(User user) throws NotFoundReservationsByUser;
+    List<Reservation> readByUser(String name) throws NotFoundReservationsByUser;
 
     /**
      * Возвращает список записей о бронировании по указанному ресурсу
