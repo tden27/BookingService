@@ -6,6 +6,7 @@ import com.github.tden27.bookingService.model.Reservation;
 import com.github.tden27.bookingService.model.Resource;
 import com.github.tden27.bookingService.model.User;
 import com.github.tden27.bookingService.service.BookingService;
+import com.github.tden27.bookingService.service.UserService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,9 +19,11 @@ import java.time.LocalDateTime;
 public class ReservationController {
 
     private final BookingService bookingService;
+    private final UserService userService;
 
-    public ReservationController(BookingService bookingService) {
+    public ReservationController(BookingService bookingService, UserService userService) {
         this.bookingService = bookingService;
+        this.userService = userService;
     }
 
     @GetMapping("/")
@@ -58,9 +61,12 @@ public class ReservationController {
     }
 
     @GetMapping("/reservation/{id}")
-    public String readById(@PathVariable("id") Long id, Model model) {
+    public String readById(@AuthenticationPrincipal User user,
+                           @PathVariable("id") Long id,
+                           Model model) {
         try {
             model.addAttribute("reservation", bookingService.readById(id));
+            model.addAttribute("isAccess", userService.isAccess(user, id));
         } catch (NotFoundReservationById e) {
             model.addAttribute("errorMessage", e.getMessage());
         }

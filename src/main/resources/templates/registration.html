@@ -21,13 +21,13 @@
         You have been logged out.
     </div>
     <form th:action="@{/registration}" method="post">
-        <div><label> User Name : <input type="text" name="name"/> </label></div>
-        <div><label> Login : <input type="text" name="username"/> </label></div>
-        <div><label> Password: <input type="password" name="password"/> </label></div>
-        <div><input class="btn btn-primary" type="submit" value="Registration"/></div>
+        <label> User Name : <input type="text" name="name"/> </label><br>
+        <label> Login : <input type="text" name="username"/> </label><br>
+        <label> Password: <input type="password" name="password"/> </label><br>
+        <input class="btn btn-primary" type="submit" value="Registration"/>
     </form>
     <div style="color:red" th:text="${param.m}">Error</div>
-    <br><br>
+    <br>
     <a href="/login">Authorisation user</a>
 </div>
 

@@ -9,10 +9,7 @@ import com.github.tden27.bookingService.model.User;
 import com.github.tden27.bookingService.service.BookingService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping
@@ -36,13 +33,14 @@ public class ReservationSearchController {
         Long idReservation = Long.parseLong(id);
         try {
             model.addAttribute("reservation", bookingService.readById(idReservation));
+            model.addAttribute("id", id);
         } catch (NotFoundReservationById e) {
             model.addAttribute("reservation", new Reservation());
             model.addAttribute("id", 0);
             model.addAttribute("errorMessage", e.getMessage());
             return "/search/searchById";
         }
-        return "/showById";
+        return "redirect:/reservation/" + id;
     }
 
     @GetMapping("/searchByUser")

@@ -13,7 +13,8 @@
 <body>
 <div class="container">
     <p th:text="${reservation.toString()}">VALUE</p>
-    <br/>
+
+    <div th:if="*{isAccess}">
     <a th:href="@{/reservation/{id}/update(id=${reservation.getId()})}">Edit</a>
     <br/>
     <form th:method="POST" th:action="@{/reservation/{id}/delete(id=${reservation.getId()})}">
@@ -21,6 +22,7 @@
         <input type="submit" value="Delete"/>
     </form>
     <p style="color:red" th:if="${errorMessage != null}" th:text="${errorMessage}">Error</p>
+    </div>
 
     <br/>
     <hr>
