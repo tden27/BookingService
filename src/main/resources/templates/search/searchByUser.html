@@ -12,6 +12,7 @@
 </head>
 <body>
 <div class="container">
+    <br>
     <form th:method="POST" th:action="@{/searchByUser}" th:object="${reservation}">
         <label for="user">Input user name</label>
         <input type="text" th:field="*{user}" id="user"/>

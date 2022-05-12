@@ -57,7 +57,6 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public boolean isAbilityToAddReservation(Long id, Resource resource, LocalDateTime start, int duration) {
-        //TODO удалять текущую запись, т.к. она участвует в проверке возможности добавления
         Reservation closestPreviousReservation = reservationRepository.findFirstByResourceAndStartBeforeOrderByStartDesc(resource, start);
         if (closestPreviousReservation == null ||
                 start.isAfter(closestPreviousReservation.getStart().plusMinutes(closestPreviousReservation.getDuration())) ||

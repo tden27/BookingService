@@ -12,14 +12,16 @@
 </head>
 <body>
 <div class="container">
-<form th:method="POST" th:action="@{/searchById}" th:object="${reservation}">
-    <label for="id">Input user id</label>
-    <input type="text" th:field="*{id}" id="id"/>
-    <input type="submit" value="Search!">
-</form>
-<p style="color:red" th:if="${errorMessage != null}" th:text="${errorMessage}">Error</p>
-<br/><hr>
-<a th:href="@{/}">Home Page</a>
+    <br>
+    <form th:method="POST" th:action="@{/searchById}" th:object="${reservation}">
+        <label for="id">Input user id</label>
+        <input type="text" th:field="*{id}" id="id"/>
+        <input type="submit" value="Search!">
+    </form>
+    <p style="color:red" th:if="${errorMessage != null}" th:text="${errorMessage}">Error</p>
+    <br/>
+    <hr>
+    <a th:href="@{/}">Home Page</a>
 </div>
 
 <!-- Optional JavaScript; choose one of the two! -->

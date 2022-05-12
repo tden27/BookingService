@@ -12,19 +12,22 @@
 </head>
 <body>
 <div class="container">
-<form th:method="POST" th:action="@{/searchByResource}" th:object="${reservation}">
-    <label for="resource">Input resource</label>
-    <select th:object="${reservation}" th:field="*{resource}" id="resource">
-        <option value="NONE">---- Select resource----</option>
-        <option th:each="resource : ${resources}"
-                th:value="${resource}"
-                th:text="${resource}">Resource</option>
-    </select>
-    <input type="submit" value="Search!">
-</form>
-<p style="color:red" th:if="${errorMessage != null}" th:text="${errorMessage}">Error</p>
-<br><hr>
-<a th:href="@{/}">Home Page</a>
+    <br>
+    <form th:method="POST" th:action="@{/searchByResource}" th:object="${reservation}">
+        <label for="resource">Input resource</label>
+        <select th:object="${reservation}" th:field="*{resource}" id="resource">
+            <option value="NONE">---- Select resource----</option>
+            <option th:each="resource : ${resources}"
+                    th:value="${resource}"
+                    th:text="${resource}">Resource
+            </option>
+        </select>
+        <input type="submit" value="Search!">
+    </form>
+    <p style="color:red" th:if="${errorMessage != null}" th:text="${errorMessage}">Error</p>
+    <br>
+    <hr>
+    <a th:href="@{/}">Home Page</a>
 </div>
 
 <!-- Optional JavaScript; choose one of the two! -->
