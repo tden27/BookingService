@@ -2,20 +2,35 @@ package com.github.tden27.bookingService.model;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
+@Entity
+@Table(name = "reservations")
 public class Reservation {
-    private int id;                 //  id брони
-    private Resource resource;      //  забронированный ресурс
-    private User user;              // пользователь забронировавший ресурс
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id")
+    private Long id;
+
+    @Column(name = "resource")
+    private Resource resource;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "username")
+    private User user;
+
+    @Column(name = "start")
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
-    private LocalDateTime start;    // дата и время начала брони
-    private int duration;           // продолжительность брони в минутах
+    private LocalDateTime start;
 
-    public Reservation() {
-    }
+    @Column(name = "duration")
+    private int duration;
 
-    public Reservation(int id, Resource resource, User user, LocalDateTime start, int duration) {
+    public Reservation() {}
+
+    public Reservation(Long id, Resource resource, User user, LocalDateTime start, int duration) {
         this.id = id;
         this.resource = resource;
         this.user = user;
@@ -23,40 +38,47 @@ public class Reservation {
         this.duration = duration;
     }
 
-    public int getId() {
+    public Reservation(Resource resource, User user, LocalDateTime start, int duration) {
+        this.resource = resource;
+        this.user = user;
+        this.start = start;
+        this.duration = duration;
+    }
+
+    public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Resource getResource() {
         return resource;
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public LocalDateTime getStart() {
-        return start;
-    }
-
-    public int getDuration() {
-        return duration;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public void setResource(Resource resource) {
         this.resource = resource;
+    }
+
+    public User getUser() {
+        return user;
     }
 
     public void setUser(User user) {
         this.user = user;
     }
 
+    public LocalDateTime getStart() {
+        return start;
+    }
+
     public void setStart(LocalDateTime start) {
         this.start = start;
+    }
+
+    public int getDuration() {
+        return duration;
     }
 
     public void setDuration(int duration) {
@@ -68,9 +90,9 @@ public class Reservation {
         return "Reservation{" +
                 "id=" + id +
                 ", resource=" + resource +
-                ", user=" + user +
+                ", user=" + user.getName() +
                 ", start=" + start +
-                ", duration=" + duration + " minutes" +
+                ", duration=" + duration +
                 '}';
     }
 }

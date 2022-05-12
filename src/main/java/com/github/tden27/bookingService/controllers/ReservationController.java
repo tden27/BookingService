@@ -6,32 +6,34 @@ import com.github.tden27.bookingService.model.Reservation;
 import com.github.tden27.bookingService.model.Resource;
 import com.github.tden27.bookingService.model.User;
 import com.github.tden27.bookingService.service.BookingService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.github.tden27.bookingService.service.UserService;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 @Controller
-@RequestMapping("/reservations")
+@RequestMapping
 public class ReservationController {
 
     private final BookingService bookingService;
+    private final UserService userService;
 
-    @Autowired
-    public ReservationController(BookingService bookingService) {
+    public ReservationController(BookingService bookingService, UserService userService) {
         this.bookingService = bookingService;
+        this.userService = userService;
     }
 
-    @GetMapping("/homePage")
-    public String homePage() {
-        return "reservations/homePage";
+    @GetMapping("/")
+    public String homePage(@AuthenticationPrincipal User user, Model model) {
+        model.addAttribute("name", user.getName());
+        return "/home";
     }
 
     @GetMapping("/new")
-    public String createReservationPage(Reservation reservation, Model model) {
+    public String createReservationPage(Model model) {
         model.addAttribute("reservation", new Reservation());
         model.addAttribute("resources", Resource.getResources());
         model.addAttribute("user", "");
@@ -40,61 +42,63 @@ public class ReservationController {
         if (!model.containsAttribute("error")) {
             model.addAttribute("error");
         }
-        return "reservations/new";
+        return "/new";
     }
 
     @PostMapping("/new")
-    public String create(@RequestParam("resource") String resource,
-                         @RequestParam("user") String user,
+    public String create(@AuthenticationPrincipal User user,
+                         @RequestParam("resource") String resource,
                          @RequestParam("start") String start,
                          @RequestParam("duration") String duration,
                          Model model) throws NotPossibleAddBookingWithThisDateAndTime {
         Resource resourceToCreate = Resource.valueOf(resource);
-        User userToCreate = new User(user);
         LocalDateTime startToCreate = LocalDateTime.parse(start);
         int durationToCreate = Integer.parseInt(duration);
-        int id = bookingService.create(resourceToCreate, userToCreate, startToCreate, durationToCreate);
+        Long id = bookingService.create(resourceToCreate, user, startToCreate, durationToCreate);
         model.addAttribute("reservation",
-                new Reservation(id, resourceToCreate, userToCreate, startToCreate, durationToCreate));
-        return "reservations/created";
+                new Reservation(id, resourceToCreate, user, startToCreate, durationToCreate));
+        return "/created";
     }
 
-    @GetMapping("/{id}")
-    public String readById(@PathVariable("id") int id, Model model) {
+    @GetMapping("/reservation/{id}")
+    public String readById(@AuthenticationPrincipal User user,
+                           @PathVariable("id") Long id,
+                           Model model) {
         try {
             model.addAttribute("reservation", bookingService.readById(id));
+            model.addAttribute("isAccess", userService.isAccess(user, id));
         } catch (NotFoundReservationById e) {
             model.addAttribute("errorMessage", e.getMessage());
         }
-        return "reservations/showById";
+        return "/showById";
     }
 
-    @GetMapping("/{id}/update")
-    public String updateReservationPage(Model model, @PathVariable("id") int id) {
+    @GetMapping("/reservation/{id}/update")
+    public String updateReservationPage(@PathVariable("id") Long id, Model model) {
         Reservation reservation;
         try {
             reservation = bookingService.readById(id);
             model.addAttribute("reservation", reservation);
             model.addAttribute("resources", Resource.getResources());
-            model.addAttribute("user", reservation.getUser().getUserName());
+            model.addAttribute("user", reservation.getUser().getName());
             model.addAttribute("start", reservation.getStart());
             model.addAttribute("duration", reservation.getDuration());
         } catch (NotFoundReservationById e) {
             model.addAttribute("errorMessage", e.getMessage());
         }
-        return "reservations/update";
+        return "/update";
     }
 
-    @PostMapping("/{id}/update")
-    public String updateReservation(@RequestParam("resource") String resource,
-                                    @RequestParam("user.userName") String user,
+    @PostMapping("/reservation/{id}/update")
+    public String updateReservation(@AuthenticationPrincipal User user,
+                                    @RequestParam("resource") String resource,
                                     @RequestParam("start") String start,
                                     @RequestParam("duration") String duration,
-                                    @PathVariable("id") int id, Model model) {
+                                    @PathVariable("id") Long id, Model model) {
         Reservation reservation = new Reservation();
         reservation.setId(id);
         reservation.setResource(Resource.valueOf(resource));
-        reservation.setUser(new User(user));
+        reservation.setUser(user);
         reservation.setStart(LocalDateTime.parse(start));
         reservation.setDuration(Integer.parseInt(duration));
         try {
@@ -103,20 +107,22 @@ public class ReservationController {
         } catch (NotPossibleAddBookingWithThisDateAndTime e) {
             model.addAttribute("reservation", e.getMessage());
         }
-        return "reservations/updated";
+        return "/updated";
     }
 
-    @PostMapping("/{id}/delete")
-    public String deleteReservation(@PathVariable("id") int id, Model model) {
+    @PostMapping("/reservation/{id}/delete")
+    public String deleteReservation(@AuthenticationPrincipal User user,
+                                    @PathVariable("id") Long id,
+                                    Model model) {
         String message = "Reservation with ID=" + id + " deleted";
         final boolean deleted = bookingService.delete(id);
         if (deleted) model.addAttribute("deleted", message);
-        return "reservations/homePage";
+        return "/home";
     }
 
     @ExceptionHandler(NotPossibleAddBookingWithThisDateAndTime.class)
     public String handlerException(NotPossibleAddBookingWithThisDateAndTime e, Model model) {
         model.addAttribute("error", e.getMessage());
-        return "redirect:/reservations/new?m=" + e.getMessage();
+        return "redirect:/new?m=" + e.getMessage();
     }
 }

@@ -7,21 +7,16 @@ import com.github.tden27.bookingService.model.Reservation;
 import com.github.tden27.bookingService.model.Resource;
 import com.github.tden27.bookingService.model.User;
 import com.github.tden27.bookingService.service.BookingService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping("/reservations")
+@RequestMapping
 public class ReservationSearchController {
 
     private final BookingService bookingService;
 
-    @Autowired
     public ReservationSearchController(BookingService bookingService) {
         this.bookingService = bookingService;
     }
@@ -30,48 +25,49 @@ public class ReservationSearchController {
     public String searchByIdPage(Model model) {
         model.addAttribute("reservation", new Reservation());
         model.addAttribute("id", 0);
-        return "reservations/search/searchById";
+        return "/search/searchById";
     }
 
     @PostMapping("/searchById")
     public String searchById(@RequestParam("id") String id, Model model) {
-        int idReservation = Integer.parseInt(id);
+        Long idReservation = Long.parseLong(id);
         try {
             model.addAttribute("reservation", bookingService.readById(idReservation));
+            model.addAttribute("id", id);
         } catch (NotFoundReservationById e) {
             model.addAttribute("reservation", new Reservation());
             model.addAttribute("id", 0);
             model.addAttribute("errorMessage", e.getMessage());
-            return "reservations/search/searchById";
+            return "/search/searchById";
         }
-        return "reservations/showById";
+        return "redirect:/reservation/" + id;
     }
 
     @GetMapping("/searchByUser")
     public String searchByUser(Model model) {
         model.addAttribute("reservation", new Reservation());
         model.addAttribute("user", "");
-        return "reservations/search/searchByUser";
+        return "/search/searchByUser";
     }
 
     @PostMapping("/searchByUser")
     public String searchByUser(@RequestParam("user") String user, Model model) {
         try {
-            model.addAttribute("reservations", bookingService.readByUser(new User(user)));
+            model.addAttribute("reservations", bookingService.readByUser(user));
         } catch (NotFoundReservationsByUser e) {
             model.addAttribute("reservation", new Reservation());
             model.addAttribute("user", "");
             model.addAttribute("errorMessage", e.getMessage());
-            return "reservations/search/searchByUser";
+            return "/search/searchByUser";
         }
-        return "reservations/showReservations";
+        return "/showReservations";
     }
 
     @GetMapping("/searchByResource")
     public String searchByResource(Model model) {
         model.addAttribute("reservation", new Reservation());
         model.addAttribute("resources", Resource.getResources());
-        return "reservations/search/searchByResource";
+        return "/search/searchByResource";
     }
 
     @PostMapping("/searchByResource")
@@ -83,8 +79,8 @@ public class ReservationSearchController {
             model.addAttribute("reservation", new Reservation());
             model.addAttribute("resources", Resource.getResources());
             model.addAttribute("errorMessage", e.getMessage());
-            return "reservations/search/searchByResource";
+            return "/search/searchByResource";
         }
-        return "reservations/showReservations";
+        return "/showReservations";
     }
 }
