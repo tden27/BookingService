@@ -4,9 +4,12 @@ import com.github.tden27.bookingService.model.User;
 import com.github.tden27.bookingService.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+
+import javax.validation.Valid;
 
 @Controller
 public class RegistrationController {
@@ -18,18 +21,22 @@ public class RegistrationController {
     }
 
     @GetMapping("/registration")
-    public String registration() {
+    public String registration(Model model) {
+        model.addAttribute("user", new User());
+        model.addAttribute("name", "name");
+        model.addAttribute("username", "username");
+        model.addAttribute("password", "password");
         return "/registration";
     }
 
     @PostMapping("/registration")
-    public String addUser(@RequestParam("name") String name,
-                          @RequestParam("username") String username,
-                          @RequestParam("password") String password,
-                          Model model) {
-        User newUser = new User(username, password, name);
-        if (!userService.addUser(newUser)) {
-            model.addAttribute("usernameError", "User exists!");
+    public String addUser(@ModelAttribute @Valid User user,
+                          BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "registration";
+        }
+
+        if (!userService.addUser(user)) {
             return "registration";
         }
         return "redirect:/login";

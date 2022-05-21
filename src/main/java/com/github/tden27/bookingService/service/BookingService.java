@@ -17,15 +17,12 @@ public interface BookingService {
 
     /**
      * Бронирует ресурс
-     * @param resource - русурс, который бронируется
-     * @param user - пользователь забронировавший ресурс
-     * @param start - дата начала бронирования
-     * @param duration - продолжительность бронирования
+     * @param reservation - запись брони
      * @return - ID брони
      * @throws NotPossibleAddBookingWithThisDateAndTime - исключение о невозможности добавления записи на указанные дату
      * время и продолжительность
      */
-    Long create(Resource resource, User user, LocalDateTime start, int duration) throws NotPossibleAddBookingWithThisDateAndTime;
+    Long create(Reservation reservation) throws NotPossibleAddBookingWithThisDateAndTime;
 
     /**
      * Возвращает запись брони по ID
@@ -39,10 +36,9 @@ public interface BookingService {
      * Обновляет запись брони с заданным ID,
      * в соответствии с переданной бронью
      * @param reservation - клиент в соответсвии с которым нужно обновить данные
-     * @param id - id записи брони которую нужно обновить
      * @return - измененную запись брони
      */
-    Reservation update(Reservation reservation, Long id) throws NotPossibleAddBookingWithThisDateAndTime;
+    Reservation update(Reservation reservation) throws NotPossibleAddBookingWithThisDateAndTime;
 
     /**
      * Освобождает ресурс по идентификатору брони

@@ -28,9 +28,8 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public Long create(Resource resource, User user, LocalDateTime start, int duration) throws NotPossibleAddBookingWithThisDateAndTime {
-        if (isAbilityToAddReservation(null, resource, start, duration)) {
-            Reservation reservation = new Reservation(resource, user, start, duration);
+    public Long create(Reservation reservation) throws NotPossibleAddBookingWithThisDateAndTime {
+        if (isAbilityToAddReservation(null, reservation.getResource(), reservation.getStart(), reservation.getDuration())) {
             return reservationRepository.save(reservation).getId();
         } else
             throw new NotPossibleAddBookingWithThisDateAndTime("It is not possible to add a booking with this date and this time");
@@ -38,9 +37,9 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     @Transactional
-    public Reservation update(Reservation reservation, Long id) throws NotPossibleAddBookingWithThisDateAndTime {
-        if (isAbilityToAddReservation(id, reservation.getResource(), reservation.getStart(), reservation.getDuration())) {
-            Reservation reservationToUpdate = reservationRepository.getOne(id);
+    public Reservation update(Reservation reservation) throws NotPossibleAddBookingWithThisDateAndTime {
+        if (isAbilityToAddReservation(reservation.getId(), reservation.getResource(), reservation.getStart(), reservation.getDuration())) {
+            Reservation reservationToUpdate = reservationRepository.getOne(reservation.getId());
             reservationToUpdate.setResource(reservation.getResource());
             reservationToUpdate.setStart(reservation.getStart());
             reservationToUpdate.setDuration(reservation.getDuration());
