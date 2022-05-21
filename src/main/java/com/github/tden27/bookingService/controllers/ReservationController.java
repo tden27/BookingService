@@ -3,7 +3,6 @@ package com.github.tden27.bookingService.controllers;
 import com.github.tden27.bookingService.exceptions.NotFoundReservationById;
 import com.github.tden27.bookingService.exceptions.NotPossibleAddBookingWithThisDateAndTime;
 import com.github.tden27.bookingService.model.Reservation;
-import com.github.tden27.bookingService.model.Resource;
 import com.github.tden27.bookingService.model.User;
 import com.github.tden27.bookingService.service.BookingService;
 import com.github.tden27.bookingService.service.UserService;
@@ -95,8 +94,7 @@ public class ReservationController {
     }
 
     @PostMapping("/reservation/{id}/delete")
-    public String deleteReservation(@AuthenticationPrincipal User user,
-                                    @PathVariable("id") Long id,
+    public String deleteReservation(@PathVariable("id") Long id,
                                     Model model) {
         String message = "Reservation with ID=" + id + " deleted";
         final boolean deleted = bookingService.delete(id);

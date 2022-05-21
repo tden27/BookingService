@@ -21,21 +21,17 @@ public class RegistrationController {
     }
 
     @GetMapping("/registration")
-    public String registration(Model model) {
-        model.addAttribute("user", new User());
-        model.addAttribute("name", "name");
-        model.addAttribute("username", "username");
-        model.addAttribute("password", "password");
+    public String registration(@ModelAttribute User user) {
         return "/registration";
     }
 
     @PostMapping("/registration")
     public String addUser(@ModelAttribute @Valid User user,
-                          BindingResult bindingResult) {
+                          BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             return "registration";
         }
-
+        model.addAttribute("user", user);
         if (!userService.addUser(user)) {
             return "registration";
         }
