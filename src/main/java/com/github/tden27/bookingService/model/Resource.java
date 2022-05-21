@@ -9,14 +9,14 @@ public enum Resource {
     MAIL_POST("Mail post"),
     CONFERENCE_HALL("Conference hall");
 
-    private final String resource;
+    private final String resourceValue;
 
-    Resource(String resource) {
-        this.resource = resource;
+    Resource(String resourceValue) {
+        this.resourceValue = resourceValue;
     }
 
-    public String getResource() {
-        return resource;
+    public String getResourceValue() {
+        return resourceValue;
     }
 
     public static List<Resource> getResources() {

@@ -3,7 +3,7 @@ create table reservations
 (
     id       int8 not null,
     duration int4,
-    resource int4,
+    resource varchar(255),
     start    timestamp,
     username varchar(255),
     primary key (id)

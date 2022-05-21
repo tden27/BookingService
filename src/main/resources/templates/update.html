@@ -4,47 +4,43 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 
     <title>Edit reservation</title>
 </head>
 <body>
-<div class="container">
+<div th:insert="~{navbar :: navbar}"></div>
+<div class="container mt-3">
     <p style="color:red" th:if="${errorMessage != null}" th:text="${errorMessage}">Error</p>
-    <form th:method="POST" th:action="@{/reservation/{id}/update(id=${reservation.getId()})}"
-          th:object="${reservation}">
-        <label for="resource">Input name of resource</label>
-        <select th:object="${reservation}" th:field="*{resource}" id="resource">
-            <option value="NONE">---- Select resource----</option>
-            <option th:each="resource : ${resources}"
-                    th:value="${resource}"
-                    th:text="${resource}">Resource
-            </option>
-        </select><br>
-        <label for="start">Input start of reservation</label>
-        <input type="datetime-local" th:field="*{start}" id="start"/>
-        <div style="color:red" th:text="${param.m}">Error</div><br>
-        <label for="duration">Input duration of reservation</label>
-        <input type="text" th:field="*{duration}" id="duration"/><br>
-        <input class="btn btn-primary" type="submit" value="Update!">
+    <form th:method="POST" th:action="@{/new}" th:object="${reservation}">
+        <div><label for="resource">Бронируемый ресурс:
+            <select th:object="${reservation}" th:field="*{resource}" id="resource">
+                <option value="NONE">---- Выберите бронируемый ресурс----</option>
+                <option th:each="resource : ${T(com.github.tden27.bookingService.model.Resource).values()}"
+                        th:value="${resource}"
+                        th:text="${resource.getResourceValue()}">Resource
+                </option>
+            </select>
+        </label>
+        </div>
+        <div style="color:red" th:if="${#fields.hasErrors('resource')}">Необходимо выбрать бронируемый ресурс</div>
+        <br>
+        <div><label for="start">Выберите дату и время начала брони</label>
+            <input type="datetime-local" th:field="*{start}" id="start"/></div>
+        <div style="color:red" th:if="${#fields.hasErrors('start')}" th:errors="*{start}">Start Error</div>
+        <br>
+        <div style="color:red" th:text="${param.m}">Error</div>
+        <div><label for="duration">Введите длительность брони (в минутах)</label>
+            <input type="text" th:field="*{duration}" id="duration"/></div>
+        <div style="color:red" th:if="${#fields.hasErrors('duration')}" th:errors="*{duration}">Duration Error</div>
+        <br>
+        <input class="btn btn-primary" type="submit" value="Создать">
     </form>
-    <hr>
-    <a th:href="@{/}">Home Page</a>
 </div>
 
-<!-- Optional JavaScript; choose one of the two! -->
-
-<!-- Option 1: Bootstrap Bundle with Popper -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
         crossorigin="anonymous"></script>
-
-<!-- Option 2: Separate Popper and Bootstrap JS -->
-<!--
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
--->
 </body>
 </html>

@@ -3,16 +3,16 @@ package com.github.tden27.bookingService.controllers;
 import com.github.tden27.bookingService.exceptions.NotFoundReservationById;
 import com.github.tden27.bookingService.exceptions.NotPossibleAddBookingWithThisDateAndTime;
 import com.github.tden27.bookingService.model.Reservation;
-import com.github.tden27.bookingService.model.Resource;
 import com.github.tden27.bookingService.model.User;
 import com.github.tden27.bookingService.service.BookingService;
 import com.github.tden27.bookingService.service.UserService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
+import javax.validation.Valid;
 
 @Controller
 @RequestMapping
@@ -27,18 +27,13 @@ public class ReservationController {
     }
 
     @GetMapping("/")
-    public String homePage(@AuthenticationPrincipal User user, Model model) {
-        model.addAttribute("name", user.getName());
+    public String homePage() {
         return "/home";
     }
 
     @GetMapping("/new")
-    public String createReservationPage(Model model) {
-        model.addAttribute("reservation", new Reservation());
-        model.addAttribute("resources", Resource.getResources());
-        model.addAttribute("user", "");
-        model.addAttribute("start", LocalDateTime.now());
-        model.addAttribute("duration", 0);
+    public String createReservationPage(@ModelAttribute Reservation reservation,
+                                        Model model) {
         if (!model.containsAttribute("error")) {
             model.addAttribute("error");
         }
@@ -46,17 +41,14 @@ public class ReservationController {
     }
 
     @PostMapping("/new")
-    public String create(@AuthenticationPrincipal User user,
-                         @RequestParam("resource") String resource,
-                         @RequestParam("start") String start,
-                         @RequestParam("duration") String duration,
+    public String create(@ModelAttribute @Valid Reservation reservation,
+                         BindingResult bindingResult,
                          Model model) throws NotPossibleAddBookingWithThisDateAndTime {
-        Resource resourceToCreate = Resource.valueOf(resource);
-        LocalDateTime startToCreate = LocalDateTime.parse(start);
-        int durationToCreate = Integer.parseInt(duration);
-        Long id = bookingService.create(resourceToCreate, user, startToCreate, durationToCreate);
-        model.addAttribute("reservation",
-                new Reservation(id, resourceToCreate, user, startToCreate, durationToCreate));
+        if (bindingResult.hasErrors()) {
+            return "/new";
+        }
+        bookingService.create(reservation);
+        model.addAttribute("reservation", reservation);
         return "/created";
     }
 
@@ -74,15 +66,11 @@ public class ReservationController {
     }
 
     @GetMapping("/reservation/{id}/update")
-    public String updateReservationPage(@PathVariable("id") Long id, Model model) {
-        Reservation reservation;
+    public String updateReservationPage(@PathVariable("id") Long id,
+                                        Model model) {
         try {
-            reservation = bookingService.readById(id);
+            Reservation reservation = bookingService.readById(id);
             model.addAttribute("reservation", reservation);
-            model.addAttribute("resources", Resource.getResources());
-            model.addAttribute("user", reservation.getUser().getName());
-            model.addAttribute("start", reservation.getStart());
-            model.addAttribute("duration", reservation.getDuration());
         } catch (NotFoundReservationById e) {
             model.addAttribute("errorMessage", e.getMessage());
         }
@@ -90,19 +78,14 @@ public class ReservationController {
     }
 
     @PostMapping("/reservation/{id}/update")
-    public String updateReservation(@AuthenticationPrincipal User user,
-                                    @RequestParam("resource") String resource,
-                                    @RequestParam("start") String start,
-                                    @RequestParam("duration") String duration,
-                                    @PathVariable("id") Long id, Model model) {
-        Reservation reservation = new Reservation();
-        reservation.setId(id);
-        reservation.setResource(Resource.valueOf(resource));
-        reservation.setUser(user);
-        reservation.setStart(LocalDateTime.parse(start));
-        reservation.setDuration(Integer.parseInt(duration));
+    public String updateReservation(@ModelAttribute @Valid Reservation reservation,
+                                    BindingResult bindingResult,
+                                    Model model) {
+        if (bindingResult.hasErrors()) {
+            return "/update";
+        }
         try {
-            bookingService.update(reservation, id);
+            bookingService.update(reservation);
             model.addAttribute("reservation", reservation);
         } catch (NotPossibleAddBookingWithThisDateAndTime e) {
             model.addAttribute("reservation", e.getMessage());
@@ -111,8 +94,7 @@ public class ReservationController {
     }
 
     @PostMapping("/reservation/{id}/delete")
-    public String deleteReservation(@AuthenticationPrincipal User user,
-                                    @PathVariable("id") Long id,
+    public String deleteReservation(@PathVariable("id") Long id,
                                     Model model) {
         String message = "Reservation with ID=" + id + " deleted";
         final boolean deleted = bookingService.delete(id);

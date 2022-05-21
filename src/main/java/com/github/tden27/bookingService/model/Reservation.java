@@ -1,12 +1,21 @@
 package com.github.tden27.bookingService.model;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import javax.validation.constraints.*;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "reservations")
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
 public class Reservation {
 
     @Id
@@ -14,7 +23,8 @@ public class Reservation {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "resource")
+    @Enumerated(EnumType.STRING)
+    @NotNull(message = "Необходимо выбрать бронируемый ресурс")
     private Resource resource;
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -23,76 +33,11 @@ public class Reservation {
 
     @Column(name = "start")
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
+    @FutureOrPresent(message = "Значение должно быть будущим либо настоящим временем")
+    @NotNull(message = "Необходимо выбрать дату и время начала")
     private LocalDateTime start;
 
     @Column(name = "duration")
+    @Min(value = 1, message = "Продолжительность брони должна быть больше 0 минут")
     private int duration;
-
-    public Reservation() {}
-
-    public Reservation(Long id, Resource resource, User user, LocalDateTime start, int duration) {
-        this.id = id;
-        this.resource = resource;
-        this.user = user;
-        this.start = start;
-        this.duration = duration;
-    }
-
-    public Reservation(Resource resource, User user, LocalDateTime start, int duration) {
-        this.resource = resource;
-        this.user = user;
-        this.start = start;
-        this.duration = duration;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Resource getResource() {
-        return resource;
-    }
-
-    public void setResource(Resource resource) {
-        this.resource = resource;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public LocalDateTime getStart() {
-        return start;
-    }
-
-    public void setStart(LocalDateTime start) {
-        this.start = start;
-    }
-
-    public int getDuration() {
-        return duration;
-    }
-
-    public void setDuration(int duration) {
-        this.duration = duration;
-    }
-
-    @Override
-    public String toString() {
-        return "Reservation{" +
-                "id=" + id +
-                ", resource=" + resource +
-                ", user=" + user.getName() +
-                ", start=" + start +
-                ", duration=" + duration +
-                '}';
-    }
 }
