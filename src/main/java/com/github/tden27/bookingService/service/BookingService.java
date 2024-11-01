@@ -6,7 +6,6 @@ import com.github.tden27.bookingService.exceptions.NotFoundReservationsByUser;
 import com.github.tden27.bookingService.exceptions.NotPossibleAddBookingWithThisDateAndTime;
 import com.github.tden27.bookingService.model.Reservation;
 import com.github.tden27.bookingService.model.Resource;
-import com.github.tden27.bookingService.model.User;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -35,7 +34,7 @@ public interface BookingService {
     /**
      * Обновляет запись брони с заданным ID,
      * в соответствии с переданной бронью
-     * @param reservation - клиент в соответсвии с которым нужно обновить данные
+     * @param reservation - клиент в соответствие с которым нужно обновить данные
      * @return - измененную запись брони
      */
     Reservation update(Reservation reservation) throws NotPossibleAddBookingWithThisDateAndTime;
@@ -53,7 +52,7 @@ public interface BookingService {
      * Проверяет возможность добавления бронирования по указанной дате и времени,
      * сравнивая с предыдущей и последующей записями бронирования
      * @param id - идентификатор брони
-     * @param resource - ресурс который бронируется
+     * @param resource - ресурс, который бронируется
      * @param start - дата и время начала бронирования
      * @param duration - продолжительность бронирования
      * @return - true если можно добавить такую запись, false если нет

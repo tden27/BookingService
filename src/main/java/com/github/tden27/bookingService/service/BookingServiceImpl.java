@@ -9,6 +9,7 @@ import com.github.tden27.bookingService.model.Resource;
 import com.github.tden27.bookingService.model.User;
 import com.github.tden27.bookingService.repository.ReservationRepository;
 import com.github.tden27.bookingService.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,15 +18,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class BookingServiceImpl implements BookingService {
 
     private final ReservationRepository reservationRepository;
     private final UserRepository userRepository;
-
-    public BookingServiceImpl(ReservationRepository reservationRepository, UserRepository userRepository) {
-        this.reservationRepository = reservationRepository;
-        this.userRepository = userRepository;
-    }
 
     @Override
     public Long create(Reservation reservation) throws NotPossibleAddBookingWithThisDateAndTime {

@@ -3,6 +3,7 @@ package com.github.tden27.bookingService.service;
 import com.github.tden27.bookingService.model.Role;
 import com.github.tden27.bookingService.model.User;
 import com.github.tden27.bookingService.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -12,17 +13,12 @@ import org.springframework.stereotype.Service;
 import java.util.Collections;
 
 @Service
+@RequiredArgsConstructor
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final BookingService bookingService;
     private final PasswordEncoder passwordEncoder;
-
-    public UserService(UserRepository userRepository, BookingService bookingService, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.bookingService = bookingService;
-        this.passwordEncoder = passwordEncoder;
-    }
 
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
